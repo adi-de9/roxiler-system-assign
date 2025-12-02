@@ -4,6 +4,7 @@ import express from "express";
 import { pool } from "./db/db.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import { logDetails } from "./middleware/logger.middleware.js";
 
 //routes imports
 import authRoutes from "./routes/auth.route.js";
@@ -23,6 +24,7 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+app.use(logDetails);
 
 // test api
 app.get("/health-check", async (req, res) => {
