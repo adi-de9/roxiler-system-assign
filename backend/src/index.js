@@ -1,10 +1,28 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
-import { pool } from "./db.js";
+import { pool } from "./db/db.js";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+
+//routes imports
+import authRoutes from "./routes/auth.route.js";
+import adminRoutes from "./routes/admin.routes.js";
+import userRoutes from "./routes/user.route.js";
+import ownerRoutes from "./routes/owner.route.js";
 
 const app = express();
+
+//middlewares
+app.use(
+  cors({
+    origin: "*",
+    credentials: true,
+  })
+);
 app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true }));
 
 // test api
 app.get("/health-check", async (req, res) => {
@@ -16,4 +34,11 @@ app.get("/health-check", async (req, res) => {
   }
 });
 
-app.listen(5000, () => console.log("Server running on port 5000"));
+app.use("/api/auth", authRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/owner", ownerRoutes);
+
+// app listen
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
