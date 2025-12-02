@@ -43,7 +43,7 @@ export const login = async (req, res) => {
 
   res
     .cookie("accessToken", token, options)
-    .json({ user: userWithoutPassword, token });
+    .json({ status: 200, success: true, user: userWithoutPassword, token });
 };
 
 export const updatePassword = async (req, res) => {
@@ -58,4 +58,9 @@ export const updatePassword = async (req, res) => {
   await User.updatePassword(user.id, hashed);
 
   res.json({ message: "Password updated" });
+};
+
+export const me = async (req, res) => {
+  const user = req.user;
+  return res.json({ user });
 };
