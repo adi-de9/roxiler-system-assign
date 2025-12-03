@@ -46,6 +46,12 @@ export const login = async (req, res) => {
     .json({ status: 200, success: true, user: userWithoutPassword, token });
 };
 
+export const logout = async (req, res) => {
+  req.user = null;
+  res.clearCookie("accessToken");
+  res.json({ success: true, message: "Logged out" });
+};
+
 export const updatePassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
   const user = req.user;

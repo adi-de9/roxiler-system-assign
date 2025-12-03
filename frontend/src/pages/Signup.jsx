@@ -89,7 +89,7 @@ function Signup() {
             </form>
 
             <p className="text-center mt-6 text-sm text-gray-600">
-                Already have an account? <span onClick={() => navigate('/auth/login')} className="text-indigo-600 font-semibold cursor-pointer hover:underline">Login</span>
+                Already have an account? <span onClick={() => navigate('/login')} className="text-indigo-600 font-semibold cursor-pointer hover:underline">Login</span>
             </p>
 
         </div>
