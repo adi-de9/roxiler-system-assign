@@ -45,7 +45,7 @@ export const addStore = async (req, res) => {
 
   //create store
   const result = await Store.create(name, email, address, ownerId);
-  
+
   res.json({ success: true, store: result.rows[0] });
 };
 
@@ -94,5 +94,11 @@ export const userDetails = async (req, res) => {
   const userRes = await User.findById(id);
   const user = userRes.rows[0];
 
-  res.json({ success: true, user: user });
+  const average_rating = await Rating.average(id);
+
+  res.json({
+    success: true,
+    user: user,
+    average_rating: average_rating.rows[0].avg_rating,
+  });
 };

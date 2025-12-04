@@ -24,11 +24,15 @@ function StorePage() {
   const { data: usersData, isLoading: isUsersLoading } = useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
+    staleTime: 1000 * 60 * 1, // 1 minute caching
+    refetchOnWindowFocus: false,
   });
 
   const { data: storesData, isLoading: isStoresLoading } = useQuery({
     queryKey: ["stores"],
     queryFn: getStores,
+    staleTime: 1000 * 60 * 1, // 1 minute caching
+    refetchOnWindowFocus: false,
   });
 
   const users = usersData?.users || [];

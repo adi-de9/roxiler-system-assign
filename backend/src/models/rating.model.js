@@ -1,6 +1,13 @@
 import { pool } from "../db/db.js";
 
 export const Rating = {
+  average: (storeId) => pool.query(
+    `SELECT ROUND(AVG(rating)::numeric, 2)::double precision AS avg_rating
+       FROM ratings
+       WHERE store_id = $1`,
+    [storeId]
+  ),
+
   createOrUpdate: (userId, storeId, rating, review = null) =>
     pool.query(
       `INSERT INTO ratings (user_id, store_id, rating, review)

@@ -7,6 +7,7 @@ import { TableHeader } from "../../utils/TableHeader";
 import { Modal } from "../../utils/Model";
 import { Input } from "../../utils/Input";
 import Loader from "../../components/Loader";
+import UserModel from "../../components/UserModel";
 
 function UsersPage() {
   const queryClient = useQueryClient();
@@ -27,11 +28,15 @@ function UsersPage() {
   const { data: usersData, isLoading: isUsersLoading } = useQuery({
     queryKey: ["users"],
     queryFn: getUsers,
+    staleTime: 1000 * 60 * 1, // 1 minute caching
+    refetchOnWindowFocus: false,
   });
 
   const { data: storesData, isLoading: isStoresLoading } = useQuery({
     queryKey: ["stores"],
     queryFn: getStores,
+    staleTime: 1000 * 60 * 1, // 1 minute caching
+    refetchOnWindowFocus: false,
   });
 
   const users = usersData?.users || [];
@@ -195,7 +200,9 @@ function UsersPage() {
                     key={user.id}
                     className="border-b border-gray-50 last:border-0 hover:bg-gray-50/50"
                   >
-                    <td className="p-4 text-gray-800 font-medium">{user.name}</td>
+                    <td className="p-4 text-gray-800 font-medium">
+                      {user.name}
+                    </td>
                     <td className="p-4 text-gray-600">{user.email}</td>
                     <td className="p-4">
                       <span
@@ -211,10 +218,12 @@ function UsersPage() {
                         {user.role}
                       </span>
                     </td>
-                    <td className="p-4 text-gray-500 text-sm">{user.address}</td>
+                    <td className="p-4 text-gray-500 text-sm">
+                      {user.address}
+                    </td>
                     <td className="p-4 text-right">
                       <button
-                        onClick={() => setDetailsModal(user)}
+                        onClick={() => setDetailsModal(user.id)}
                         className="text-gray-400 hover:text-indigo-600 transition-colors"
                         title="View Details"
                       >
@@ -229,6 +238,7 @@ function UsersPage() {
         )}
       </div>
 
+      {/* User Create Model */}
       <Modal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
@@ -256,7 +266,7 @@ function UsersPage() {
           />
           <Input
             label="Password"
-            type="text"
+            type="password"
             value={newUser.password}
             onChange={(e) =>
               setNewUser({ ...newUser, password: e.target.value })
@@ -285,8 +295,8 @@ function UsersPage() {
               <option value="ADMIN">Admin</option>
             </select>
           </div>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="w-full btn mt-4 bg-indigo-600 hover:bg-indigo-700 text-white"
             disabled={addUserMutation.isPending}
           >
@@ -295,68 +305,9 @@ function UsersPage() {
         </form>
       </Modal>
 
-      <Modal
-        isOpen={!!detailsModal}
-        onClose={() => setDetailsModal(null)}
-        title="User Details"
-      >
-        {detailsModal && (
-          <div className="space-y-4">
-            <div className="bg-gray-50 p-4 rounded-lg flex items-center gap-4">
-              <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold text-xl">
-                {detailsModal.name.charAt(0)}
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900">{detailsModal.name}</h3>
-                <p className="text-sm text-gray-500">{detailsModal.role}</p>
-              </div>
-            </div>
-
-            <div className="space-y-3">
-              <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase">
-                  Email
-                </label>
-                <p className="text-gray-800">{detailsModal.email}</p>
-              </div>
-              <div>
-                <label className="text-xs font-semibold text-gray-500 uppercase">
-                  Address
-                </label>
-                <p className="text-gray-800">{detailsModal.address}</p>
-              </div>
-              {detailsModal.role === "OWNER" && (
-                <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-100">
-                  <label className="text-xs font-bold text-yellow-700 uppercase">
-                    Owner Rating
-                  </label>
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-2xl font-bold text-gray-800">
-                      {getOwnerRating(detailsModal.id)}
-                    </span>
-                    <Star
-                      size={20}
-                      className="text-yellow-400"
-                      fill="currentColor"
-                    />
-                    <span className="text-xs text-gray-500">
-                      (Avg across all stores)
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="pt-4">
-              <button onClick={() => setDetailsModal(null)} className="w-full">
-                Close
-              </button>
-            </div>
-          </div>
-        )}
-      </Modal>
+      <UserModel id={detailsModal} setDetailsModal={setDetailsModal} />
     </div>
   );
-};
+}
 
 export default UsersPage;
