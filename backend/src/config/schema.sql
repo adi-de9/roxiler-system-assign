@@ -20,6 +20,7 @@ CREATE TABLE ratings (
   user_id INT REFERENCES users(id),
   store_id INT REFERENCES stores(id),
   rating INT CHECK (rating BETWEEN 1 AND 5),
+  review VARCHAR(400),
   updated_at TIMESTAMP DEFAULT NOW(),
   UNIQUE(user_id, store_id)
 );

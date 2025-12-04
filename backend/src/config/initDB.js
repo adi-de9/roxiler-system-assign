@@ -1,7 +1,6 @@
 import fs from "fs";
-import { pool } from "../config/db.js";
-
-const sql = fs.readFileSync("./src/db/schema.sql").toString();
+import { pool } from "../db/db.js";
+const sql = fs.readFileSync("./src/config/schema.sql").toString();
 console.log(sql);
 
 pool

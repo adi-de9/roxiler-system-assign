@@ -15,4 +15,19 @@ export const User = {
 
   updatePassword: (id, newPassword) =>
     pool.query("UPDATE users SET password=$1 WHERE id=$2", [newPassword, id]),
+
+  count: () => pool.query("SELECT COUNT(*) FROM users"),
+
+  search: (search) =>
+    pool.query(`SELECT * FROM users WHERE name ILIKE $1 OR email ILIKE $1`, [
+      `%${search}%`,
+    ]),
+
+  find: (search) =>
+    pool.query(`SELECT * FROM users WHERE name ILIKE $1 OR email ILIKE $1`, [
+      `%${search}%`,
+    ]),
+
+  updateRole: (id, role) =>
+    pool.query(`UPDATE users SET role=$1 WHERE id=$2`, [role, id]),
 };

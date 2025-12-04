@@ -1,6 +1,7 @@
 import { Rating } from "../models/rating.model.js";
 import { Store } from "../models/store.model.js";
 import { User } from "../models/user.model.js";
+import bcrypt from "bcryptjs";
 
 export const addUser = async (req, res) => {
   const { name, email, password, address, role } = req.body;
@@ -9,7 +10,7 @@ export const addUser = async (req, res) => {
 
   try {
     const user = await User.create(name, email, hashed, address, role);
-    res.json(user.rows[0]);
+    res.json({ success: true, user: user.rows[0] });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -18,8 +19,34 @@ export const addUser = async (req, res) => {
 export const addStore = async (req, res) => {
   const { name, email, address, ownerId } = req.body;
 
+  //Check if owner exists
+  const ownerRes = await User.findById(ownerId);
+  const owner = ownerRes.rows[0];
+
+  if (!owner) {
+    return res
+      .status(400)
+      .json({ success: false, message: "Owner does not exist!" });
+  }
+
+  // 2. If role = USER → upgrade to OWNER
+  if (owner.role === "USER") {
+    await User.updateRole(ownerId, "OWNER");
+    owner.role = "OWNER";
+  }
+
+  // 3. If role is not OWNER → still invalid (like ADMIN)
+  if (owner.role !== "OWNER") {
+    return res.status(400).json({
+      success: false,
+      message: "User cannot be a store owner",
+    });
+  }
+
+  //create store
   const result = await Store.create(name, email, address, ownerId);
-  res.json(result.rows[0]);
+  
+  res.json({ success: true, store: result.rows[0] });
 };
 
 export const adminDashboard = async (req, res) => {
@@ -28,24 +55,37 @@ export const adminDashboard = async (req, res) => {
   const ratings = await Rating.count();
 
   res.json({
-    total_users: users.rows[0].count,
-    total_stores: stores.rows[0].count,
-    total_ratings: ratings.rows[0].count,
+    success: true,
+    stats: {
+      total_users: Number(users.rows[0].count),
+      total_stores: Number(stores.rows[0].count),
+      total_ratings: Number(ratings.rows[0].count),
+    },
   });
 };
 
 export const listUsers = async (req, res) => {
   const { search = "" } = req.query;
 
-  const users = await User.search(search);
-  res.json(users.rows);
+  let users;
+  if (search.trim() === "") {
+    users = await User.find();
+  }
+
+  users = await User.search(search);
+  res.json({ success: true, users: users.rows });
 };
 
 export const listStores = async (req, res) => {
   const { search = "" } = req.query;
 
-  const stores = await Store.search(search);
-  res.json(stores.rows);
+  let stores;
+  if (search.trim() === "") {
+    stores = await Store.findAll();
+  }
+
+  stores = await Store.search(search);
+  res.json({ success: true, stores: stores.rows });
 };
 
 export const userDetails = async (req, res) => {
@@ -54,5 +94,5 @@ export const userDetails = async (req, res) => {
   const userRes = await User.findById(id);
   const user = userRes.rows[0];
 
-  res.json(user);
+  res.json({ success: true, user: user });
 };

@@ -11,7 +11,7 @@ function DashboardLayout() {
   const toggleMobile = () => setMobileMenuOpen(!mobileMenuOpen);
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen max-w-400 mx-auto bg-gray-50 flex">
       {/* Desktop Sidebar */}
       <Sidebar />
 
@@ -26,7 +26,7 @@ function DashboardLayout() {
         </main>
       </div>
 
-      {/* Mobile Menu Overlay (Simplified) */}
+      {/* Mobile Menu Overlay */}
       {mobileMenuOpen && <MobileSideBar toggleMobile={toggleMobile} />}
     </div>
   );

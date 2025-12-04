@@ -1,24 +1,27 @@
 import { Key, LayoutDashboard, Star, Store, Users } from "lucide-react";
 import { useMemo } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 
 const Sidebar = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const menuItems = useMemo(() => {
-    const common = [{ label: "Settings", path: "/settings", icon: Key }];
+    const common = [
+      { label: "Settings", path: "/dashboard/settings", icon: Key },
+    ];
 
     if (user.role === "ADMIN") {
       return [
         { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
-        { label: "Users", path: "/users", icon: Users },
-        { label: "Stores", path: "/stores", icon: Store },
+        { label: "Users", path: "/dashboard/users", icon: Users },
+        { label: "Stores", path: "/dashboard/stores", icon: Store },
         ...common,
       ];
     }
-    if (user.role === "STORE_OWNER") {
+    if (user.role === "OWNER") {
       return [
         { label: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
         ...common,
@@ -45,7 +48,7 @@ const Sidebar = () => {
             key={item.path}
             onClick={() => navigate(item.path)}
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all ${
-              "/dashboard" === item.path
+              pathname === item.path
                 ? "bg-indigo-600 text-white shadow-lg shadow-indigo-900/50"
                 : "text-gray-400 hover:bg-gray-800 hover:text-white"
             }`}

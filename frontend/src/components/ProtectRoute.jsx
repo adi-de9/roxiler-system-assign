@@ -1,11 +1,10 @@
-import { useNavigate } from "react-router";
+import { useNavigate, Navigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
 import { Loader } from "lucide-react";
 
 function ProtectRoute({ children, allowedRoles }) {
   const { user, loading } = useAuth();
   const navigate = useNavigate();
-  console.log(user?.role);
 
   if (loading)
     return (
@@ -15,9 +14,7 @@ function ProtectRoute({ children, allowedRoles }) {
     );
 
   if (!user) {
-    // Redirect logic handle in useEffect usually, but direct render change works here
-    setTimeout(() => navigate("/login"), 0);
-    return null;
+    return <Navigate to="/login" replace />;
   }
 
   if (allowedRoles && !allowedRoles.includes(user.role)) {

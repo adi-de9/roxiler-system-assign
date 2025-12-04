@@ -1,18 +1,57 @@
 import { AlertCircle, Star } from 'lucide-react';
-import React from 'react'
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { SignUp } from '../utils/auth';
+import { Validators } from '../utils/Validatore';
 
 function Signup() {
     const [form, setForm] = useState({ fullName: '', email: '', address: '', password: '' });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const navigate = useNavigate()
+    const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+
+        // Validation
+        if (!Validators.name(form.fullName)) {
+            return setError('Name must be between 20 and 60 characters.');
+        }
+        if (!Validators.email(form.email)) {
+            return setError('Invalid email address.');
+        }
+        if (!Validators.address(form.address)) {
+            return setError('Address cannot exceed 400 characters.');
+        }
+        if (!Validators.password(form.password)) {
+            return setError('Password must be 8-16 chars, with 1 uppercase & 1 special char.');
+        }
+
         setLoading(true);
+
+        try {
+            const data = await SignUp({
+                name: form.fullName,
+                email: form.email,
+                address: form.address,
+                password: form.password
+            });
+
+            if (data) {
+                // Assuming successful signup returns user data or success message
+                navigate('/login');
+            }
+        } catch (err) {
+            console.error(err);
+            if (err.response && err.response.data && err.response.data.error) {
+                setError(err.response.data.error);
+            } else {
+                setError('Failed to sign up. Please try again.');
+            }
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
@@ -21,8 +60,8 @@ function Signup() {
                 <div className="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto mb-4">
                     <Star size={24} fill="currentColor" />
                 </div>
-                <h1 className="text-2xl font-bold text-gray-900">Welcome Back</h1>
-                <p className="text-gray-500 text-sm mt-1">Sign in to your account</p>
+                <h1 className="text-2xl font-bold text-gray-900">Create Account</h1>
+                <p className="text-gray-500 text-sm mt-1">Join us today!</p>
             </div>
 
             {error && (
@@ -37,7 +76,7 @@ function Signup() {
                     <input
                         label="Full Name"
                         type="text"
-                        placeholder="Aditya Deshmukh"
+                        placeholder="full name"
                         value={form.fullName}
                         onChange={e => setForm({ ...form, fullName: e.target.value })}
                         required
@@ -84,7 +123,7 @@ function Signup() {
                     />
                 </div>
                 <button type="submit" className="w-full btn bg-indigo-600 text-white hover:bg-indigo-700" disabled={loading} >
-                    {loading ? 'Signing in...' : 'Sign In'}
+                    {loading ? 'Signing up...' : 'Sign Up'}
                 </button>
             </form>
 

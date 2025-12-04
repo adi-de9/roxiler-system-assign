@@ -37,9 +37,8 @@ function LoginPage() {
 
       if (data.success) {
         setError("");
-        // setForm({ email: '', password: '' });
+        setForm({ email: "", password: "" });
         setUser(data.user);
-        navigate("/dashboard");
       }
       // navigate('/');
     } catch (err) {

@@ -17,7 +17,7 @@ router.use(authenticate, authorize(["ADMIN"]));
 router.post("/add-user", addUser);
 router.post("/add-store", addStore);
 
-router.get("/dashboard", adminDashboard);
+router.get("/stats", adminDashboard);
 router.get("/users", listUsers);
 router.get("/stores", listStores);
 router.get("/users/:id", userDetails);
