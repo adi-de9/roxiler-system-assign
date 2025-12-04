@@ -4,7 +4,14 @@ A full-stack web application that allows users to browse stores, submit ratings 
 
 ## 🎥 Demo Video
 
-[Insert Video URL Here]
+<iframe width="560" height="315"
+        src="https://www.youtube.com/embed/sYMqlSiiDtQ?si=uphnfx6KQzdPv8uk"
+        title="YouTube video player"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
+        allowfullscreen></iframe>
+
 
 ---
 
