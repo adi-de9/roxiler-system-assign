@@ -113,10 +113,12 @@ function LoginPage() {
       <div className="mt-8 pt-6 border-t border-gray-100 text-xs text-gray-400">
         <p className="font-semibold mb-2">Test Credentials:</p>
         <div className="grid grid-cols-2 gap-2">
-          <span>Admin: admin@admin.com</span>
-          <span>Pass: Password!1</span>
-          <span>Owner: owner@store.com</span>
-          <span>Pass: Password!1</span>
+          <span>Admin: admin@gmail.com</span>
+          <span>Pass: admin@gmail.com</span>
+          <span>Owner: owner@gmail.com</span>
+          <span>Pass: owner@gmail.com</span>
+          <span>User: user@gmail.com</span>
+          <span>Pass: user@gmail.com</span>
         </div>
       </div>
     </div>

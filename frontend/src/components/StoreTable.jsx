@@ -52,7 +52,7 @@ function StoreTable({ stores, users, sortConfig, requestSort, isLoading }) {
 
         <tbody>
           {stores.map((store) => {
-            const owner = users.find((u) => u.id === store.ownerId);
+            const owner = users.find((u) => u.id === store.owner_id);
 
             return (
               <tr

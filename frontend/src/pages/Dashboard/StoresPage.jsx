@@ -38,6 +38,7 @@ function StorePage() {
   const users = usersData?.users || [];
   const stores = storesData?.stores || [];
   const isLoading = isUsersLoading || isStoresLoading;
+  // console.log(stores,stores);
 
   const addStoreMutation = useMutation({
     mutationFn: (storeData) => addStore(storeData),

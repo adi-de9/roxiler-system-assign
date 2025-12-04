@@ -9,10 +9,10 @@ SELECT
   s.name,
   s.address,
 
-  -- ⭐ Overall average rating
+  -- Overall average rating
   COALESCE((ROUND(AVG(r.rating)::numeric, 2))::double precision, 0) AS average_rating,
 
-  -- ⭐ User's own rating
+  -- User's own rating
   COALESCE(
     (SELECT rating::double precision 
      FROM ratings 
@@ -20,10 +20,10 @@ SELECT
     0
   ) AS user_rating,
 
-  -- ⭐ How many total ratings?
+  -- How many total ratings?
   COUNT(r.id) AS rating_count,
 
-  -- ⭐ Only this user's review (if exists)
+  -- Only this user's review (if exists)
   COALESCE(
     (
       SELECT json_build_object(

@@ -137,7 +137,7 @@ function UserDashboard() {
               <p className="text-sm text-gray-500 mb-4 grow">{store.address}</p>
 
               {/* USER'S RATING SECTION */}
-              {store.user_rating ? (
+              {store.user_rating > 0 ? (
                 <div className="mb-4 bg-gray-50 p-3 rounded-lg border border-gray-200">
                   <div className="flex justify-between items-center mb-1">
                     <p className="text-xs font-semibold text-gray-600">
